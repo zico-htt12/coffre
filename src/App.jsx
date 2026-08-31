@@ -42,7 +42,7 @@ function App() {
   )
 
   return (
-    <main>
+    <main onClick={()=>setSelectedTransaction(null)}>
       <h1><img src={coffre} alt="logo" width="150" height="150" /></h1>
       <p>Solde : ${solde}</p>
       <input
@@ -60,79 +60,85 @@ function App() {
 
       <p>Montant entré : {montant}</p>
       <button
-      className="ajouter"
-      onClick={() => {
-        if(Number(montant)>0){
-        const transaction = {
-          montant: Number(montant),
-          note: note,
-          date: new Date(),
-          type: 'ajout'
-        }
-        setTransactions([...transactions, transaction])
-        setSolde(solde + Number(montant))
-        setMontant('')
-        setNote('')
-      }}}>
-        <img src={ajouter} alt="Ajouter"  /></button>
-      <button 
-      className="depenser"
-      onClick={() => {
-
-        if (solde >= Number(montant) && Number(montant)>0) {
-          const transaction = {
-            montant: Number(montant),
-            note: note,
-            date: new Date(),
-            type: 'Depense'
+        className="ajouter"
+        onClick={() => {
+          if (Number(montant) > 0) {
+            const transaction = {
+              montant: Number(montant),
+              note: note,
+              date: new Date(),
+              type: 'ajout'
+            }
+            setTransactions([...transactions, transaction])
+            setSolde(solde + Number(montant))
+            setMontant('')
+            setNote('')
           }
-          setTransactions([...transactions, transaction])
-          setSolde(solde - Number(montant))
-          setMontant('')
-          setNote('')
-        }
-      }}>
-        <img src={depenser} alt="Depenser"  /></button>
+        }}>
+        <img src={ajouter} alt="Ajouter" /></button>
+      <button
+        className="depenser"
+        onClick={() => {
+
+          if (solde >= Number(montant) && Number(montant) > 0) {
+            const transaction = {
+              montant: Number(montant),
+              note: note,
+              date: new Date(),
+              type: 'Depense'
+            }
+            setTransactions([...transactions, transaction])
+            setSolde(solde - Number(montant))
+            setMontant('')
+            setNote('')
+          }
+        }}>
+        <img src={depenser} alt="Depenser" /></button>
 
       <div>
         {transactions.map((transaction) => {
           return (
-            
-            <p onClick={()=> setSelectedTransaction(transaction)}>
+
+            <p
+              className={selectedTransaction === transaction ? 'selected' : ''}
+              onClick={(e) =>{ 
+              e.stopPropagation()
+              setSelectedTransaction(transaction)}}>
               {transaction.type === 'ajout' ? '+' : '-'}
               ${transaction.montant} : {transaction.note}
               : {transaction.date.toLocaleDateString('fr-FR')}
             </p>
-           
+
           )
 
         })
         }
 
       </div>
-      
-      <button onClick={()=>{ 
+
+      <button onClick={() => {
         setSolde(0)
-        setTransactions([])}
+        setTransactions([])
+      }
       }>
         reset
       </button>
 
-      <button onClick={()=>{
-        if(selectedTransaction){
-          const nouvelleTransac=transactions.filter((transaction)=>
-          {return transaction!== selectedTransaction})
+      <button onClick={() => {
+        if (selectedTransaction) {
+          const nouvelleTransac = transactions.filter((transaction) => { return transaction !== selectedTransaction })
           setTransactions(nouvelleTransac)
-          if(selectedTransaction.type=='ajout'){
-            setSolde(solde-selectedTransaction.montant)
+          if (selectedTransaction.type == 'ajout') {
+            setSolde(solde - selectedTransaction.montant)
           }
-          else{
-            setSolde(solde+selectedTransaction.montant)
+          else {
+            setSolde(solde + selectedTransaction.montant)
           }
-        
-        setSelectedTransaction(null)}
+
+          setSelectedTransaction(null)
+        }
       }}>
-      supprimer la transaction
+        supprimer la transaction
       </button>
     </main>
 
