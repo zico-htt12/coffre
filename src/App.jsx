@@ -62,6 +62,7 @@ function App() {
       <button
       className="ajouter"
       onClick={() => {
+        if(Number(montant)>0){
         const transaction = {
           montant: Number(montant),
           note: note,
@@ -72,13 +73,13 @@ function App() {
         setSolde(solde + Number(montant))
         setMontant('')
         setNote('')
-      }}>
+      }}}>
         <img src={ajouter} alt="Ajouter"  /></button>
       <button 
       className="depenser"
       onClick={() => {
 
-        if (solde >= Number(montant)) {
+        if (solde >= Number(montant) && Number(montant)>0) {
           const transaction = {
             montant: Number(montant),
             note: note,
